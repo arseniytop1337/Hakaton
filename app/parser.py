@@ -27,32 +27,22 @@ HEADER_PATTERNS = {
 def extract_field(text: str, patterns: list[str]) -> str:
     for pattern in patterns: #перебираем все возможные шаблоны присущие для одного поля
         match = re.search(pattern, text, re.MULTILINE) #ищем совпадения не только на одной строке но и по всему  тексту
-
         if match: #если нашли совпадение возвращаем содержимое первой группы без пробелов
             return match.group(1).strip()
     return "" #если ничего не нашли
 
 def extract_body(text: str) -> str: #пытается выделить тело письма
-    parts = text.split("\n\n", 1) #делим заголовок и тело по первому пустому абзацу
-
+    parts = re.split(r"\n\s*\n", text, maxsplit=1) #делим заголовок и тело по первому пустому абзацу
     if len(parts) == 2:#если удалось поделить текст на 2 части
         return parts[1].strip() #возвращаем вторую часть как тело письма
+    return text.strip() #если письмо странное и разделения нет, значит возвращаем текст полностью
 
-    return text.split() #если письмо странное и разделения нет, значит возвращаем текст полностью
+def parse_email(path: Path, raw_text: str) -> EmailMessage: #Главная функция парсинга по сути: сделать из сырого текста обьект EmailMassage
+    subject = extract_field(raw_text, HEADER_PATTERNS["subject"])#пытаемся вытащить тему письма
+    sender = extract_field(raw_text, HEADER_PATTERNS["sender"])#пытаемся вытащить отправителя
+    body = extract_body(raw_text)#пытаемся вытащить тело письма
 
-#Главная функция парсинга по сути: сделать из сырого текста обьект EmailMassage
-def parse_email(path: Path, raw_text: str) -> EmailMessage:
-    #пытаемся вытащить тему письма
-    subject = extract_field(raw_text, HEADER_PATTERNS["subject"])
-
-    #пытаемся вытащить отправителя
-    sender = extract_field(raw_text, HEADER_PATTERNS["sender"])
-
-    #пытаемся вытащить тело письма
-    body = extract_body(raw_text)
-
-    #возвращаем готовую структуру
-    return EmailMessage(
+    return EmailMessage( #возвращаем готовую структуру
         path=path,
         subject=subject,
         sender=sender,

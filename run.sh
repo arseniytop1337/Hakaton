@@ -6,5 +6,5 @@ if [ ! -d "data/input" ]; then
 fi
 
 echo "Starting mail processor..."
-python3 app/main.py
+python3 -m app.main
 echo "Done."

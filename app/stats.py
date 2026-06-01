@@ -27,5 +27,5 @@ def record_error():
     processing_stats["total_processed"] += 1
     processing_stats["errors"] += 1
 
-def get_stats() -> dict:
+def get_stats() -> dict: #функция возвращает всю накопленную статистику целиком
     return processing_stats

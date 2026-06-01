@@ -1,13 +1,8 @@
-#Собственные исключения проекта.
-#Например: ошибка чтения письма, неподдерживаемый формат, ошибка парсинга
-#он делает обработку ошибку более понятной
-
-class UnsupportedFileFormatError(Exception): #не подходящий формат файла
-    '''Файл существует но его формат не поддерживается.'''
+class UnsupportedFileFormatError(Exception):
+    pass
 
 class EmptyEmailError(Exception):
-    """Файл прочитан, но внутри нет содержимого."""
+    pass
 
-class InputDirectoryNotFoundError(Exception): #файла не нашлось
-    """Входная директория не найдена."""
-
+class InputDirectoryNotFoundError(Exception):
+    pass
